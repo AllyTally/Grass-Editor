@@ -1,0 +1,10 @@
+﻿  editor.cpp
+  main.cpp
+  graphics.cpp
+C:\Users\Ally\source\repos\Grass Editor\Grass Editor\graphics.cpp(11,19): error C2086:  'TTF_Font *graphics::font': redefinition
+C:\Users\Ally\source\repos\Grass Editor\Grass Editor\graphics.h(17): message :  see declaration of 'graphics::font'
+C:\Users\Ally\source\repos\Grass Editor\Grass Editor\graphics.cpp(55,29): warning C4838:  conversion from 'int' to 'Uint8' requires a narrowing conversion
+C:\Users\Ally\source\repos\Grass Editor\Grass Editor\graphics.cpp(55,32): warning C4838:  conversion from 'int' to 'Uint8' requires a narrowing conversion
+  map.cpp
+  Generating Code...
+C:\Users\Ally\source\repos\Grass Editor\Grass Editor\graphics.cpp(55,35): warning C4838:  conversion from 'int' to 'Uint8' requires a narrowing conversion
