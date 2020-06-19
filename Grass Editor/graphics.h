@@ -14,8 +14,8 @@ extern SDL_Renderer* g_renderer;
 
 namespace graphics
 {
-    //TTF_Font* font;
-    void Init()
+    extern TTF_Font* font;
+    void Init();
     SDL_Texture* LoadImage(const char* path);
     void DrawImage(SDL_Texture* image, int x, int y);
     void DrawImagePart(SDL_Texture* image, int x, int y, int x2, int y2, int w, int h);
