@@ -7,8 +7,8 @@
 
 namespace editor
 {
-    map::room current_room;
-    int current_tileset;
+    extern map::room current_room;
+    extern int current_tileset;
     void EditorInit();
     void EditorLogic();
     void EditorRender();

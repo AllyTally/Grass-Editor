@@ -6,6 +6,9 @@
 #include "map.h"
 #include "graphics.h"
 
+map::room editor::current_room;
+int editor::current_tileset;
+
 void editor::EditorInit() {
     editor::current_room = editor::CreateEmptyRoom();
     editor::current_tileset = 0;
