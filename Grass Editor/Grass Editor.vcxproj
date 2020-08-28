@@ -73,6 +73,10 @@
     <IncludePath>C:\cpp_inc\SDL2_ttf-2.0.15\include;C:\cpp_inc\SDL2_mixer-2.0.4\include;C:\cpp_inc\SDL2_image-2.0.5\include;C:\cpp_inc\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\cpp_inc\SDL2_ttf-2.0.15\lib\x86;C:\cpp_inc\SDL2_mixer-2.0.4\lib\x86;C:\cpp_inc\SDL2_image-2.0.5\lib\x86;C:\cpp_inc\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\cpp_inc\SDL2-2.0.12\include;C:\cpp_inc\SDL2_ttf-2.0.15\include;C:\cpp_inc\SDL2_mixer-2.0.4\include;C:\cpp_inc\SDL2_image-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\cpp_inc\SDL2_image-2.0.5\lib\x64;C:\cpp_inc\SDL2_mixer-2.0.4\lib\x64;C:\cpp_inc\SDL2_ttf-2.0.15\lib\x64;C:\cpp_inc\SDL2-2.0.12\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -91,9 +95,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
