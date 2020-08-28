@@ -128,15 +128,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="editor.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="tileset_editor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="editor.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="tileset_editor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

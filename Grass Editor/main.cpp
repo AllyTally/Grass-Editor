@@ -21,8 +21,13 @@
 
 #include "map.h"
 #include "graphics.h"
-#include "editor.h"
 #include "enums.h"
+#include "input.h"
+
+// Gamestates
+#include "editor.h"
+#include "tileset_editor.h"
+
 
 // Screen dimension constants
 const int   SCREEN_WIDTH  = 320;
@@ -100,32 +105,24 @@ int main(int argc, char* args[])
     
     // Initialize our namespaces!
     graphics::Init();
-    editor::EditorInit();
+    editor::Init();
 
 
     bool quit = false;
     SDL_Event e;
 
-    int mouse_x = 0;
-    int mouse_y = 0;
-    int mouse_grid_x = 0;
-    int mouse_grid_y = 0;
-    int mouse_block_x = 0;
-    int mouse_block_y = 0;
-
-    bool mouse_left_down = false;
-    bool mouse_left_pressed = false;
-    bool mouse_left_up = false;
-    bool mouse_right_down = false;
-    bool mouse_right_pressed = false;
-    bool mouse_right_up = false;
-
     while (!quit)
     {
-        mouse_left_down = false;
-        mouse_left_up = false;
-        mouse_right_down = false;
-        mouse_right_up = false;
+        input::mouse_left_down = false;
+        input::mouse_left_up = false;
+        input::mouse_right_down = false;
+        input::mouse_right_up = false;
+
+        for (auto& key : input::current_keys) {
+            if (key.second == 1)  key.second = 2;
+            if (key.second == -1) key.second = 0;
+        }
+
         while (SDL_PollEvent(&e) != 0)
         {
             //User requests quit
@@ -136,148 +133,75 @@ int main(int argc, char* args[])
             }
             else if (e.type == SDL_MOUSEMOTION)
             {
-                mouse_x = e.motion.x;
-                mouse_y = e.motion.y;
-                mouse_block_x = mouse_x / 16;
-                mouse_block_y = mouse_y / 16;
-                mouse_grid_x = mouse_block_x * 16;
-                mouse_grid_y = mouse_block_y * 16;
+                input::mouse_x = e.motion.x;
+                input::mouse_y = e.motion.y;
+                input::mouse_block_x = input::mouse_x / 16;
+                input::mouse_block_y = input::mouse_y / 16;
+                input::mouse_grid_x = input::mouse_block_x * 16;
+                input::mouse_grid_y = input::mouse_block_y * 16;
             }
             else if (e.type == SDL_MOUSEBUTTONDOWN)
             {
                 if (e.button.button == SDL_BUTTON_LEFT)
                 {
-                    mouse_left_down = true;
-                    mouse_left_pressed = true;
+                    input::mouse_left_down = true;
+                    input::mouse_left_pressed = true;
                 }
                 else if (e.button.button == SDL_BUTTON_RIGHT)
                 {
-                    mouse_right_down = true;
-                    mouse_right_pressed = true;
+                    input::mouse_right_down = true;
+                    input::mouse_right_pressed = true;
                 }
             }
             else if (e.type == SDL_MOUSEBUTTONUP)
             {
                 if (e.button.button == SDL_BUTTON_LEFT)
                 {
-                    mouse_left_up = true;
-                    mouse_left_pressed = false;
+                    input::mouse_left_up = true;
+                    input::mouse_left_pressed = false;
                 }
                 else if (e.button.button == SDL_BUTTON_RIGHT)
                 {
-                    mouse_right_up = true;
-                    mouse_right_pressed = false;
+                    input::mouse_right_up = true;
+                    input::mouse_right_pressed = false;
                 }
             }
             //User presses a key
             else if (e.type == SDL_KEYDOWN)
             {
                 //Select surfaces based on key press
-                switch (e.key.keysym.sym)
-                {
-                    case SDLK_s:
-                    {
-                        std::array<std::vector<std::pair<int, int>>, map::TILE_ENUM_LENGTH> ts{};
-                        ts[map::TILE_TOPLEFT]              = { {0,0} };
-                        ts[map::TILE_TOP]                  = { {1,0} };
-                        ts[map::TILE_TOPRIGHT]             = { {2,0} };
-                        ts[map::TILE_MIDDLELEFT]           = { {0,1} };
-                        ts[map::TILE_MIDDLE]               = { {1,1}, {1,1}, {1,1}, {1,1}, {1,1}, {1,1}, {1,1}, {4,0} };
-                        ts[map::TILE_MIDDLERIGHT]          = { {2,1} };
-                        ts[map::TILE_BOTTOMLEFT]           = { {0,2} };
-                        ts[map::TILE_BOTTOM]               = { {1,2} };
-                        ts[map::TILE_BOTTOMRIGHT]          = { {2,2} };
-
-                        ts[map::TILE_BOTTOMLEFTCONNECTOR]  = { {4,1} };
-                        ts[map::TILE_BOTTOMRIGHTCONNECTOR] = { {3,1} };
-                        ts[map::TILE_TOPLEFTCONNECTOR]     = { {4,2} };
-                        ts[map::TILE_TOPRIGHTCONNECTOR]    = { {3,2} };
-
-                        ts[map::TILE_SINGLE]               = { {3,0} };
-
-                        ts[map::TILE_SINGLE_LEFT]          = { {0,3} };
-                        ts[map::TILE_SINGLE_HORIZONTAL]    = { {1,3} };
-                        ts[map::TILE_SINGLE_RIGHT]         = { {2,3} };
-                        ts[map::TILE_SINGLE_UP]            = { {0,4} };
-                        ts[map::TILE_SINGLE_VERTICAL]      = { {1,4} };
-                        ts[map::TILE_SINGLE_DOWN]          = { {2,4} };
-
-                        ts[map::TILE_SINGLE_TOPLEFT]       = { {3,3} };
-                        ts[map::TILE_SINGLE_TOPRIGHT]      = { {4,3} };
-                        ts[map::TILE_SINGLE_BOTTOMLEFT]    = { {3,4} };
-                        ts[map::TILE_SINGLE_BOTTOMRIGHT]   = { {4,4} };
-
-                        ts[map::TILE_SINGLE_ALL_CONNECT]   = { {5,0} };
-                        ts[map::TILE_SINGLE_THREE_BOTTOM]  = { {5,1} };
-                        ts[map::TILE_SINGLE_THREE_TOP]     = { {5,3} };
-                        ts[map::TILE_SINGLE_THREE_LEFT]    = { {5,2} };
-                        ts[map::TILE_SINGLE_THREE_RIGHT]   = { {5,4} };
-
-                        ts[map::TILE_TOP_BOTTOMRIGHTCONNECTOR] = { {6,0} };
-                        ts[map::TILE_TOP_BOTTOMLEFTCONNECTOR]  = { {7,0} };
-                        ts[map::TILE_BOTTOM_TOPRIGHTCONNECTOR] = { {6,1} };
-                        ts[map::TILE_BOTTOM_TOPLEFTCONNECTOR]  = { {7,1} };
-
-                        ts[map::TILE_LEFT_BOTTOMRIGHTCONNECTOR]       = { {6,2} };
-                        ts[map::TILE_LEFT_TOPRIGHTCONNECTOR]          = { {6,3} };
-                        ts[map::TILE_RIGHT_BOTTOMLEFTCONNECTOR]       = { {7,2} };
-                        ts[map::TILE_RIGHT_TOPLEFTCONNECTOR]          = { {7,3} };
-
-                        map::tilesheet a;
-                        a.filepath = "grass.png";
-                        a.name = "Grass";
-                        a.tileset = ts;
-                        bool saved = map::SaveTileset("maps/test.ats", a);
-                        //std::cout << saved << std::endl;
-                        break;
-                    }
-                    case SDLK_o:
-                        map::tilesheet a = map::ReadTileset("maps/test.ats");
-                        bool saved = map::SaveTileset("maps/test2.ats", a);
-                        break;
-                }
+                input::current_keys[SDL_GetKeyName(e.key.keysym.sym)] = 1;
+            }
+            else if (e.type == SDL_KEYUP)
+            {
+                //Select surfaces based on key press
+                input::current_keys[SDL_GetKeyName(e.key.keysym.sym)] = -1;
             }
         }
         if (quit) break;
 
-        if (mouse_left_pressed) {
-            if ((mouse_block_x >= 0 && mouse_block_x < editor::current_room.width) && (mouse_block_y >= 0 && mouse_block_y < editor::current_room.height)) {
-                if ((editor::current_room.tiles[mouse_block_x + mouse_block_y * editor::current_room.width].tileset != editor::current_tileset) ||
-                    (!editor::current_room.tiles[mouse_block_x + mouse_block_y * editor::current_room.width].active)) {
-                    map::tile tile;
-                    tile.x = 0;
-                    tile.y = 0;
-                    tile.solid = true;
-                    tile.rotation = 0;
-                    tile.tileset = editor::current_tileset;
-                    tile.active = true;
-                    map::SetTile(&editor::current_room, mouse_block_x, mouse_block_y, tile);
-                    map::AutotileRadius(&editor::current_room, mouse_block_x, mouse_block_y);
-                }
-            }
-        }
-        if (mouse_right_pressed) {
-            if ((mouse_block_x >= 0 && mouse_block_x < editor::current_room.width) && (mouse_block_y >= 0 && mouse_block_y < editor::current_room.height)) {
-                editor::current_room.tiles[mouse_block_x + mouse_block_y * editor::current_room.width].active = false;
-                map::AutotileRadius(&editor::current_room, mouse_block_x, mouse_block_y);
-            }
-        }
-
         // Logic state machine!
         switch (state) {
             case MODE_MAPEDITOR:
-                editor::EditorLogic();
+                state = editor::Logic();
+                break;
+            case MODE_TILESETEDITOR:
+                state = tileset_editor::Logic();
                 break;
         };
 
         //Clear screen
+        SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
         SDL_RenderClear(g_renderer);
 
         // Rendering state machine!
         switch (state) {
-        case MODE_MAPEDITOR:
-            editor::EditorRender();
-            break;
+            case MODE_MAPEDITOR:
+                editor::Render();
+                break;
+            case MODE_TILESETEDITOR:
+                tileset_editor::Render();
+                break;
         };
 
         //Update screen

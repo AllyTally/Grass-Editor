@@ -52,7 +52,7 @@ namespace graphics {
     }
 
     bool DrawText(TTF_Font* font, int x, int y, std::string text, int r, int g, int b, int a) {
-        SDL_Color color = { r, g, b };  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+        SDL_Color color = { (Uint8) r, (Uint8) g, (Uint8) b };  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
 
         SDL_Surface* surface_text = TTF_RenderText_Solid(font, text.c_str(), color); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
 
@@ -95,4 +95,16 @@ namespace graphics {
         DrawTextBordered(font, x, y, text, r, g, b, 255);
     }
 
+    void DrawRectangle(int x, int y, int w, int h, int r, int g, int b, int a) {
+        SDL_SetRenderDrawColor(g_renderer, r, g, b, a);
+        SDL_Rect rectangle;
+        rectangle.x = x;
+        rectangle.y = y;
+        rectangle.w = w;
+        rectangle.h = h;
+        SDL_RenderDrawRect(g_renderer, &rectangle);
+    }
+    void DrawRectangle(int x, int y, int w, int h, int r, int g, int b) {
+        DrawRectangle(x, y, w, h, r, g, b, 255);
+    }
 }

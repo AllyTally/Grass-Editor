@@ -67,10 +67,9 @@ namespace map
     struct tilesheet {
         std::string filepath;
         std::string name;
-        SDL_Texture* sprite;
-        //int width;
-        //int height;
+        SDL_Texture* sprite = nullptr;
         std::array<std::vector<std::pair<int, int>>,TILE_ENUM_LENGTH> tileset;
+        bool successful = false;
     };
     struct tile {
         int tileset = 0;

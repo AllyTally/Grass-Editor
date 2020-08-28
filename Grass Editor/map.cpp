@@ -101,6 +101,7 @@ map::tilesheet map::ReadTileset(const char* filepath) {
             read_tileset.tileset[i].push_back(read);
         }
     }
+    read_tileset.successful = true;
     return read_tileset;
 }
 
@@ -215,7 +216,7 @@ bool map::AutoTile(map::room* room, int x, int y) {
                             }
                         }
                         else {
-                            map::AdjustTile(room, x, y, current_tile.tileset, map::TILE_MIDDLE);
+                            map::AdjustTile(room, x, y, current_tile.tileset, map::TILE_SINGLE_ALL_CONNECT);
                         }
                     }
                 }
